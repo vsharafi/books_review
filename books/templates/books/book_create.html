@@ -6,7 +6,7 @@
     <div class="container">
                 <div dir="rtl">
                     <h1>افزودن کتاب</h1>
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form|crispy }}
                         <button type="submit" class="btn btn-success mb-3">افزودن</button>

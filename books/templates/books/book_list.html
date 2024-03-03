@@ -1,21 +1,58 @@
 {% extends '_base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 <title>{% block page_title %}لیست کتاب ها{% endblock page_title %}</title>
 {% block content %}
-    <div class="container">
-        <h1>لیست کتاب ها</h1>
+<div class="container mt-4">
+    <div class="row flex-row-reverse justify-content-md-center">
         {% if books %}
             {% for book in books %}
-                <div dir="rtl">
-                    <a href="{{ book.get_absolute_url }}"><h1>عنوان: {{ book.title }}</h1></a>
-                    <p>نویسنده: {{ book.author }}</p>
-                    <p>خلاصه کتاب: {{ book.content }}</p>
-                    <hr>
+                <div class="card m-2" style="max-width: 45%">
+                    <div class="row g-0 h-100" dir="rtl">
+                        <div class="col-md-4">
+                            {% if book.cover %}
+                              <img
+                              src="{{book.cover.url}}" class="img-fluid rounded-start" alt="..."/>
+                             {% else %}
+                             <img src="{% static 'fdb85390-9c08-4b34-9447-863356af88e4 (1).webp' %}" class="img-fluid rounded-start" alt="..."/>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8 h-100">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <div class="card-body">
+                                    <a class="text-decoration-none" href="{{ book.get_absolute_url }}"><h3 class="card-title"><strong>{{ book.title }}</strong></h3></a>                                    <p class="card-text pt-3">{{ book.content|truncatewords:30 }}</p>
+                                    <p class="text-muted">نویسنده: {{ book.author }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
         {% endif %}
-        <a href="{% url 'book_create' %}">افزودن کتاب</a>
     </div>
-
+</div>
+    <nav class="justify-content-center" aria-label="...">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.number|add:-1 }}" tabindex="-1">Previous</a>
+            </li>
+        {% endif %}
+          {% if page_obj.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+          {% endif %}
+        <li class="page-item active">
+          <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }} <span class="sr-only"></span></a>
+        </li>
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+      {% endif %}
+      </ul>
+    </nav>
 {% endblock content %}
