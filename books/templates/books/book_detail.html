@@ -1,0 +1,19 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+<title>{% block page_title %}{{ book.title }}{% endblock page_title %}</title>
+{% block content %}
+    <div class="container">
+                <div dir="rtl">
+                    <h1>عنوان: {{ book.title }}</h1>
+                    <p>نویسنده: {{ book.author }}</p>
+                    <p>خلاصه کتاب: {{ book.content }}</p>
+                    <p>قیمت کتاب: {{ book.price }}</p>
+                    <a class="btn btn-info" href="{% url 'book_update' book.id %}">ویرایش کتاب</a> |
+                    <a class="btn btn-danger" href="{% url 'book_delete' book.id %}">حذف کتاب</a>
+                    <hr>
+                    <a href="{% url 'book_list' %}">لیست همه کتاب ها</a>
+                    
+    </div>
+
+{% endblock content %}

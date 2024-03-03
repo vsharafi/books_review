@@ -1,0 +1,21 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+<title>{% block page_title %}لیست کتاب ها{% endblock page_title %}</title>
+{% block content %}
+    <div class="container">
+        <h1>لیست کتاب ها</h1>
+        {% if books %}
+            {% for book in books %}
+                <div dir="rtl">
+                    <a href="{{ book.get_absolute_url }}"><h1>عنوان: {{ book.title }}</h1></a>
+                    <p>نویسنده: {{ book.author }}</p>
+                    <p>خلاصه کتاب: {{ book.content }}</p>
+                    <hr>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <a href="{% url 'book_create' %}">افزودن کتاب</a>
+    </div>
+
+{% endblock content %}
