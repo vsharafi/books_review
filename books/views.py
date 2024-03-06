@@ -3,6 +3,8 @@ from django.urls import reverse_lazy
 from .models import Book, Comment
 from .forms import CommentForm
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+# from django.contrib.auth.decorators import login_required
 
 
 class BookListView(generic.ListView):
@@ -57,27 +59,41 @@ def edit_comment_view(request, pk, cid):
 #     template_name = 'books/book_detail.html'
 
 
-class BookCreateView(generic.CreateView):
+class BookCreateView(LoginRequiredMixin, generic.CreateView):
     model = Book
     template_name = 'books/book_create.html'
-    fields = '__all__'
+    fields = ['title', 'author', 'description', 'price', 'cover']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        return super().form_valid(form)
 
 
-class BookUpdateView(generic.UpdateView):
+class BookUpdateView(UserPassesTestMixin, generic.UpdateView):
     model = Book
     template_name = "books/book_update.html"
-    fields = '__all__'
+    fields = ['title', 'author', 'description', 'price', 'cover']
 
     def form_valid(self, form):
         if form.has_changed():
+            form.instance.user = self.request.user
             form.save()
             return redirect('book_detail', self.object.pk)
         else:
             return redirect('book_update', self.object.pk)
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user
 
-class BookDeleteView(generic.DeleteView):
+
+class BookDeleteView(UserPassesTestMixin, generic.DeleteView):
     model = Book
     template_name = 'books/book_delete.html'
     success_url = reverse_lazy('book_list')
     success_message = 'kir'
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user

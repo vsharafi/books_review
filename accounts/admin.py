@@ -14,7 +14,7 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {'fields': ('age', )}),
     )
-    list_display = ('username', 'email', 'age', 'is_staff')
+    list_display = ('username', 'email', 'age', 'is_staff', 'id')
 
 
 # Register your models here.
